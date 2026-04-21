@@ -6,304 +6,728 @@
 <title>모바일 인터페이스</title>
 
 <style>
-body {
-    margin: 0;
-    background: #222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+body{
+    margin:0;
+    background:#222;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
 
-.phone {
-    width: 360px;
-    height: 640px;
-    background: #111;
-    border-radius: 30px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    position: relative;
+.phone{
+    width:360px;
+    height:640px;
+    background:#111;
+    border-radius:30px;
+    box-shadow:0 0 30px rgba(0,0,0,0.5);
+    position:relative;
+    overflow:hidden;
 }
 
-/* 🔥 스토리 레이어 */
-.overlay2 {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    padding: 30px 20px;
-    box-sizing: border-box;
-    z-index: 4;
-    opacity: 1;
-    transition: opacity 0.4s;
+/* 아이콘 */
+.icon{
+    position:absolute;
+    font-size:48px;
+    cursor:pointer;
+    z-index:4;
 }
 
-/* 🧱 게임 레이어 */
-.overlay3 {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: none;
-    z-index: 3;
-    background: #111;
+.map-icon{ left:15px; top:15px; }
+
+.person-icon{
+    left:15px;
+    top:90px;
+    color:#b30000;
+    opacity:0.8;
 }
 
-/* 📘 책 레이어 */
-.bookOverlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: none;
-    z-index: 5;
-    background: #1a1a1a;
-    padding: 20px;
-    box-sizing: border-box;
+.book-icon{
+    right:15px;
+    top:15px;
+    filter:sepia(100%) brightness(1.2) saturate(0.6);
 }
 
-/* 📱 기본 UI */
-.map-icon {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 48px;
+/* 선택지 */
+.choice-panel{
+    position:absolute;
+    top:90px;
+    left:20px;
+    right:20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
 }
 
-/* 📕 책 아이콘 */
-.book-icon {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 48px;
-    filter: sepia(100%) hue-rotate(20deg) brightness(0.85) saturate(0.7);
-    opacity: 0.95;
-    cursor: pointer;
+.choice-btn{
+    border:2px solid #888;
+    border-radius:12px;
+    padding:12px;
+    color:#f5e6c8;
+    background:rgba(0,0,0,0.35);
+    cursor:pointer;
 }
 
-.book-icon:active {
-    transform: scale(0.95);
+/* 로그창 */
+.log-overlay{
+    position:absolute;
+    top:90px;
+    left:20px;
+    right:20px;
+    height:300px;
+    background:#000;
+    border:2px solid #a68b5b;
+    border-radius:14px;
+    display:none;
+    z-index:5;
 }
 
-/* ⌨️ 입력창 */
-.input-box {
-    position: absolute;
-    top: 180px;
-    left: 20px;
-    right: 20px;
-    height: 120px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 15px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.log-title{
+    position:absolute;
+    top:12px;
+    left:14px;
+    color:#f5e6c8;
+    font-size:16px;
 }
 
-.input-box textarea {
-    flex: 1;
-    resize: none;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #e0d3b8;
-    font-size: 16px;
+.log-close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    color:#f5e6c8;
+    cursor:pointer;
+    border:1px solid #a68b5b;
+    padding:4px 8px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.05);
 }
 
-.send-btn {
-    height: 40px;
-    background: #444;
-    border-radius: 8px;
-    text-align: center;
-    line-height: 40px;
-    color: #fff;
-    cursor: pointer;
+.log-body{
+    position:absolute;
+    top:50px;
+    left:14px;
+    right:14px;
+    bottom:54px;
+    color:#ccc;
+    line-height:1.6;
+    overflow:auto;
+    white-space:pre-wrap;
 }
 
-.send-btn:active {
-    background: #666;
+.log-investigate{
+    position:absolute;
+    right:14px;
+    bottom:12px;
+    color:#111;
+    background:#9dcf6a;
+    border:1px solid #6b9442;
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    display:none;
+    font-weight:bold;
 }
 
-/* 하단 슬롯 */
-.bottom {
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    right: 15px;
-    display: flex;
-    gap: 10px;
+/* 입력창 */
+.input-box{
+    position:absolute;
+    top:400px;
+    left:20px;
+    right:20px;
+    height:120px;
+    background:rgba(0,0,0,0.7);
+    border-radius:15px;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
-.box {
-    flex: 1;
-    height: 60px;
-    background: #333;
-    border-radius: 10px;
+.input-box textarea{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#e0d3b8;
+    resize:none;
+    font-size:16px;
+}
+
+.send-btn{
+    height:40px;
+    background:#444;
+    border-radius:8px;
+    text-align:center;
+    line-height:40px;
+    color:#fff;
+    cursor:pointer;
+}
+
+/* 슬롯 */
+.bottom{
+    position:absolute;
+    bottom:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    gap:10px;
+}
+
+.box{
+    flex:1;
+    height:60px;
+    background:#333;
+    border-radius:10px;
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:28px;
+    color:#fff;
+    border:2px solid transparent;
+    transition:0.2s;
+    cursor:default;
 }
 
-/* 돌아가기 버튼 */
-.back-btn {
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
-    padding: 10px 15px;
-    background: #444;
-    color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
+.box.clue-active{
+    border-color:#77d46a;
+    box-shadow:0 0 12px rgba(119,212,106,0.55);
+    background:#264226;
+    cursor:pointer;
 }
 
-/* 텍스트 */
-.story {
-    font-size: 20px;
-    line-height: 1.8;
+/* overlay */
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#111;
+    display:none;
+    z-index:6;
+    padding:20px;
+    box-sizing:border-box;
 }
 
-.red {
-    color: #ff3b3b;
-    font-weight: bold;
+.overlay-icon{
+    position:absolute;
+    top:15px;
+    left:15px;
+    font-size:48px;
+    cursor:pointer;
 }
 
-.beige {
-    color: #f5e6c8;
+.book-overlay-icon{
+    position:absolute;
+    top:15px;
+    right:15px;
+    font-size:48px;
+    cursor:pointer;
+}
+
+.map-image{
+    width:100%;
+    margin-top:80px;
+    pointer-events:none;
+}
+
+/* 엔딩 레이어 */
+.ending-overlay{
+    position:absolute;
+    inset:0;
+    background:#000;
+    display:none;
+    z-index:10;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.ending-text{
+    font-size:28px;
+    font-weight:bold;
+    line-height:1.5;
 }
 </style>
 </head>
 
 <body>
 
-<div class="phone" onclick="nextStep()">
+<div class="phone">
 
-    <!-- 📱 기본 UI -->
-    <div class="map-icon">🗺️</div>
-    <div class="book-icon" onclick="openBook(event)">📕</div>
+    <div class="icon map-icon" onclick="openMap()">🗺️</div>
+    <div class="icon person-icon" onclick="openPerson()">👤</div>
+    <div class="icon book-icon" onclick="openBook()">📕</div>
 
-    <!-- ⌨️ 입력창 -->
+    <div class="choice-panel" id="choicePanel">
+        <div class="choice-btn" onclick="selectChoice('도서관을 조사한다.')">도서관을 조사한다.</div>
+        <div class="choice-btn" onclick="selectChoice('제2공학관을 조사한다.')">제2공학관을 조사한다.</div>
+        <div class="choice-btn" onclick="selectChoice('조형과학관을 조사한다.')">조형과학관을 조사한다.</div>
+        <div class="choice-btn" onclick="selectChoice('체육관을 조사한다.')">체육관을 조사한다.</div>
+        <div class="choice-btn" onclick="selectChoice('강석규교육관을 조사한다.')">강석규교육관을 조사한다.</div>
+    </div>
+
+    <div class="choice-panel" id="finalChoicePanel" style="display:none;">
+        <div class="choice-btn" onclick="selectChoice('단서를 조사한다.')">단서를 조사한다.</div>
+    </div>
+
+    <div class="choice-panel" id="suspectChoicePanel" style="display:none;"></div>
+
+    <div id="logOverlay" class="log-overlay">
+        <div id="logTitle" class="log-title"></div>
+        <div class="log-close" onclick="closeLog()">닫기</div>
+        <div id="logBody" class="log-body"></div>
+        <div id="logInvestigateBtn" class="log-investigate" onclick="investigateCurrentClue()">조사</div>
+    </div>
+
     <div class="input-box">
-        <textarea id="userInput" placeholder="내용을 입력하세요..."></textarea>
-        <div class="send-btn" onclick="sendInput(event)">입력</div>
+        <textarea id="userInput"></textarea>
+        <div class="send-btn" onclick="sendInput()">입력</div>
     </div>
 
-    <!-- 하단 슬롯 -->
     <div class="bottom">
-        <div class="box"></div>
-        <div class="box"></div>
-        <div class="box"></div>
-        <div class="box"></div>
-        <div class="box"></div>
+        <div class="box" id="slot1" onclick="openClueSlot(1)"></div>
+        <div class="box" id="slot2" onclick="openClueSlot(2)"></div>
+        <div class="box" id="slot3" onclick="openClueSlot(3)"></div>
+        <div class="box" id="slot4" onclick="openClueSlot(4)"></div>
+        <div class="box" id="slot5" onclick="openClueSlot(5)"></div>
     </div>
 
-    <!-- 🧱 게임 레이어 -->
-    <div id="overlay3" class="overlay3">
-        <div class="back-btn" onclick="goHome(event)">돌아가기</div>
+    <div id="mapOverlay" class="overlay">
+        <div class="overlay-icon" onclick="closeMap()">🗺️</div>
+        <img src="map.png" class="map-image" alt="지도 이미지">
     </div>
 
-    <!-- 🔥 스토리 레이어 -->
-    <div id="overlay2" class="overlay2">
-        <div class="story">
+    <div id="personOverlay" class="overlay">
+        <div class="overlay-icon" onclick="closePerson()">👤</div>
 
-            <div id="line1">
-                <span class="red">살인 사건이 일어났다.</span>
-                <span id="arrow1" class="beige"> ▼</span>
+        <h2 style="color:#f5e6c8;margin-top:80px;">용의자 정보</h2>
+
+        <p style="color:#f5e6c8;">A : 사건 당일 도서관에서 책을 보고 있었다.</p>
+        <p style="color:#f5e6c8;">B : 2공학관에서 공부를 하고 있었다.</p>
+        <p style="color:#f5e6c8;">C : 조형과학관에서 영상을 보고 있었다.</p>
+        <p style="color:#f5e6c8;">D : 체육관에서 연습을 했다.</p>
+        <p style="color:#f5e6c8;">E : 강석규교육관에서 전공책을 사고 있었다.</p>
+    </div>
+
+    <div id="bookOverlay" class="overlay">
+        <div class="book-overlay-icon" onclick="closeBook()">📖</div>
+
+        <div style="margin-top:80px; line-height:1.8; font-size:18px;">
+            <div style="color:#ff4b4b; font-weight:bold;">
+                어제 살인사건이 일어났다.
             </div>
 
-            <div id="line2" style="display:none; margin-top: 40px;">
-                <span class="beige">"피해자는 2X살 OOO씨 호서대학교 재학생"</span>
-                <span id="arrow2" class="beige"> ▼</span>
+            <div style="color:#f5e6c8; margin-top:18px;">
+                시각은 20:00, 비가 많이 오는 밤이였다.
             </div>
 
-            <div id="line3" style="display:none; margin-top: 40px;">
-                <span class="beige">"범인은 아직 잡히지 않았다."</span>
-                <span id="arrow3" class="beige"> ▼</span>
+            <div style="color:#f5e6c8; margin-top:18px;">
+                사건당시 유일하게 남아있던 5명을<br>
+                용의자로 지목했다.
             </div>
 
-            <div id="line4" style="display:none; margin-top: 40px;">
-                <span class="beige">"정말 말도 안 나올 정도로 아무런 단서도 잡히지 않는다."</span>
-                <span id="arrow4" class="beige"> ▼</span>
+            <div style="color:#f5e6c8; margin-top:18px;">
+                각 용의자의 알리바이를 듣고
             </div>
 
-            <div id="line5" style="display:none; margin-top: 40px;">
-                <span class="beige">"유일한 증거품은 피해자의 휴대폰"</span>
-                <span id="arrow5" class="beige"> ▼</span>
+            <div style="color:#f5e6c8; margin-top:18px;">
+                누가 범인인지 추리하자
             </div>
-
-            <div id="line6" style="display:none; margin-top: 40px;">
-                <span class="beige">"나는 무언가에 홀린 듯 휴대폰을 켜본다."</span>
-                <span id="arrow6" class="beige"> ▼</span>
-            </div>
-
         </div>
     </div>
 
-    <!-- 📘 책 레이어 -->
-    <div id="bookOverlay" class="bookOverlay">
-        <h2 style="color:#f5e6c8;">📕 단서 노트</h2>
-        <p style="color:#f5e6c8;">• 피해자의 휴대폰이 유일한 단서</p>
-        <p style="color:#f5e6c8;">• 마지막 기록이 삭제됨</p>
-        <p style="color:#f5e6c8;">• 외부 접근 흔적 존재</p>
-
-        <div class="back-btn" onclick="closeBook(event)">닫기</div>
+    <div id="endingOverlay" class="ending-overlay">
+        <div id="endingText" class="ending-text"></div>
     </div>
 
 </div>
 
 <script>
-let step = 0;
-let keyCount = 0;
+let answer = [0,0,0,0,0];
+let randomIndex = Math.floor(Math.random() * 5);
+answer[randomIndex] = 1;
+console.log("answer =", answer);
 
-function nextStep() {
-    step++;
+let hint;
+do{
+    hint = [];
+    for(let i = 0; i < 5; i++){
+        hint[i] = Math.random() < 0.5 ? 0 : 1;
+    }
+}while(hint.filter(v => v === 1).length < 2);
+console.log("hint =", hint);
 
-    if (step === 1) { arrow1.style.display="none"; line2.style.display="block"; }
-    else if (step === 2) { arrow2.style.display="none"; line3.style.display="block"; }
-    else if (step === 3) { arrow3.style.display="none"; line4.style.display="block"; }
-    else if (step === 4) { arrow4.style.display="none"; line5.style.display="block"; }
-    else if (step === 5) { arrow5.style.display="none"; line6.style.display="block"; }
-    else if (step === 6) {
-        overlay2.style.opacity="0";
-        setTimeout(()=>{
-            overlay2.style.display="none";
-            overlay3.style.display="block";
-        },400);
+const suspectNames = ["A","B","C","D","E"];
+let investigatedSlots = [false, false, false, false, false];
+let suspectMode = false;
+
+const logs = {
+    "도서관을 조사한다.":
+        "도서관 내부를 조사했다.<br><br>안경쓴 개 동상의 손 색은?<br><span style='color:#888;'>양식) OO색</span>",
+
+    "제2공학관을 조사한다.":
+        "제2공학관 내부를 조사했다.<br><br>4층 푸른 건물사진의 글자는?<br><span style='color:#888;'>양식) 띄어쓰기 미포함</span>",
+
+    "조형과학관을 조사한다.":
+        "조형과학관 내부를 조사했다.<br><br>붉은색 긴 소파 개수는?<br><span style='color:#888;'>양식) 5</span>",
+
+    "체육관을 조사한다.":
+        "체육관 내부를 조사했다.<br><br>태권도장 호실 번호는?<br><span style='color:#888;'>양식) 101</span>",
+
+    "강석규교육관을 조사한다.":
+        "강석규교육관 내부를 조사했다.<br><br>강석규 박사 논산보통학교 졸업년도는?<br><span style='color:#888;'>양식) 2026</span>",
+
+    "단서를 조사한다.":
+        "모든 단서를 모았다.<br><br>이제 아래 단서칸을 눌러 각각의 단서를 조사할 수 있다."
+};
+
+const finalStatements = {
+    "A":{
+        question:"나: 도서 대출 이력이 고쳐써져 있더군요.",
+        0:"A: 이력이 잘못 출력되었는데<br>너무 늦은 시간이라 다음날 수정해 달라 부탁하려고<br>임시로 고쳐 적었었습니다.",
+        1:"A: 직원이 고친거 아닐까요?<br>저는 책읽는데 집중해서 잘.."
+    },
+
+    "B":{
+        question:"나: 당신의 공책에서 피해자의 혈흔이 발견되었습니다",
+        0:"B: 제가 '피해자'에게 빌려준적이 있습니다<br>그때 너무 피곤했는지 코피를 공책에 묻혀<br>미안하다 하더군요",
+        1:"B: 피해자랑 부딪혔을때 공책에<br>종이부분이 피해자를 베었습니다<br>그때 묻은거 같군요"
+    },
+
+    "C":{
+        question:"나: 영상은 혼자 보신겁니까?",
+        0:"C: 내 그때 혼자였습니다<br>아 제가 들어오기전에 누가 나가는건 봤습니다",
+        1:"C: 왜그러시죠? 무슨 문제라도 있나요?<br>그때 혼자이긴 했습니다"
+    },
+
+    "D":{
+        question:"나: 사건당시에는 계속 연습하고 계셨던건가요?",
+        0:"D: 늦게까지 연습하다 그대로 돌아갔습니다<br>도복을 갈아입을 힘도 안나더군요",
+        1:"D: 피곤해서 많이는 못했습니다<br>옷도 대충 벗어두고 돌아갔죠"
+    },
+
+    "E":{
+        question:"나: 이 우산은 본인 것이 맞습니까?",
+        0:"E: 네 제꺼네요<br>우산이 너무 녹슬어서<br>그냥 새로운거 사서 돌아갔어요<br>사건 때문에 버리지도 못지만요",
+        1:"E: 아닌거 같은데요?<br>제 우산은 그날 쓰고 돌아가서<br>지금 집에 있거든요"
+    }
+};
+
+const answerRewards = {
+    "분홍색": { slot: 1, icon: "📝" },
+    "VILLAOASIS": { slot: 2, icon: "📓" },
+    "3": { slot: 3, icon: "👤" },
+    "208": { slot: 4, icon: "🥋" },
+    "1928": { slot: 5, icon: "☂️" }
+};
+
+const clueSlotLogs = {
+    1:{
+        title:"도서 대출 이력서",
+        body:
+        "도서관을 조사하다 발견한<br>" +
+        "대출 이력서 기록이 많다<br>" +
+        "A의 이름이 적혀있다."
+    },
+
+    2:{
+        title:"필기노트",
+        body:
+        "공부에 쓴거같은 노트다.<br>" +
+        "전공지식이 많이 빼곡히 적혀있다.<br>" +
+        "B의 이름이 적혀있다."
+    },
+
+    3:{
+        title:"머리카락",
+        body:
+        "머리카락 여러 가닥이 엉켜있다.<br>" +
+        "전부 한사람 것으로 추측된다."
+    },
+
+    4:{
+        title:"태권도 도복",
+        body:
+        "정돈되지 않은 도복이다.<br>" +
+        "여러차례 사용했는지<br>" +
+        "여기저기 해져있다."
+    },
+
+    5:{
+        title:"젖은 우산",
+        body:
+        "평범한 우산이다.<br>" +
+        "사건 당시 비가 내려서 그런지<br>" +
+        "아직 물기가 남아있다."
+    }
+};
+
+let clueMode = false;
+let currentClueSlot = null;
+
+function selectChoice(text){
+    document.getElementById("userInput").value = text;
+}
+
+function unlockAllClues(){
+    document.getElementById("slot1").textContent = "📝";
+    document.getElementById("slot2").textContent = "📓";
+    document.getElementById("slot3").textContent = "👤";
+    document.getElementById("slot4").textContent = "🥋";
+    document.getElementById("slot5").textContent = "☂️";
+
+    document.getElementById("choicePanel").style.display = "none";
+    document.getElementById("logOverlay").style.display = "none";
+    document.getElementById("finalChoicePanel").style.display = "flex";
+}
+
+function checkAllItemsCollected(){
+    const allFilled = [1,2,3,4,5].every(i => {
+        return document.getElementById("slot" + i).textContent.trim() !== "";
+    });
+
+    if(allFilled){
+        document.getElementById("choicePanel").style.display = "none";
+        document.getElementById("logOverlay").style.display = "none";
+        document.getElementById("finalChoicePanel").style.display = "flex";
     }
 }
 
-function sendInput(e) {
-    e.stopPropagation();
+function enableClueMode(){
+    clueMode = true;
+    document.querySelectorAll(".box").forEach(box => {
+        if(box.textContent.trim() !== ""){
+            box.classList.add("clue-active");
+        }
+    });
+}
 
-    const inputEl = document.getElementById("userInput");
-    const input = inputEl.value;
+function showSuspectChoices(){
+    const panel = document.getElementById("suspectChoicePanel");
+    panel.innerHTML = "";
 
-    if (input.trim() === "") return;
-
-    // 🔑 열쇠 시스템
-    if (input === "1234") {
-        const boxes = document.querySelectorAll(".box");
-
-        if (keyCount < boxes.length) {
-            boxes[keyCount].textContent = "🔑";
-            keyCount++;
+    for(let i = 0; i < 5; i++){
+        if(hint[i] === 1 || answer[i] === 1){
+            const btn = document.createElement("div");
+            btn.className = "choice-btn";
+            btn.textContent = `${suspectNames[i]}의 마지막 발언을 듣는다.`;
+            btn.onclick = () => showFinalStatement(suspectNames[i]);
+            panel.appendChild(btn);
         }
     }
 
-    alert("입력됨: " + input);
-    inputEl.value = "";
+    document.getElementById("choicePanel").style.display = "none";
+    document.getElementById("finalChoicePanel").style.display = "none";
+    panel.style.display = "flex";
+
+    suspectMode = true;
+    document.getElementById("userInput").value = "누가 범인인가?";
 }
 
-function goHome(e) {
-    e.stopPropagation();
-    overlay3.style.display="none";
+function checkAllCluesInvestigated(){
+    const allDone = investigatedSlots.every(v => v === true);
+    if(allDone){
+        showSuspectChoices();
+    }
 }
 
-function openBook(e) {
-    e.stopPropagation();
-    document.getElementById("bookOverlay").style.display="block";
+function handleSuspectGuess(input){
+    const guess = input.trim().toUpperCase();
+    if(!suspectNames.includes(guess)) return false;
+
+    const idx = suspectNames.indexOf(guess);
+    const isCorrect = answer[idx] === 1;
+
+    const endingOverlay = document.getElementById("endingOverlay");
+    const endingText = document.getElementById("endingText");
+
+    if(isCorrect){
+        endingText.textContent = "당신은 범인을 검거하였습니다.";
+        endingText.style.color = "#6bff6b";
+    }else{
+        endingText.textContent = "검거에 실패하였습니다";
+        endingText.style.color = "#ff5a5a";
+    }
+
+    endingOverlay.style.display = "flex";
+    return true;
 }
 
-function closeBook(e) {
-    e.stopPropagation();
-    document.getElementById("bookOverlay").style.display="none";
+function sendInput(){
+    const input = document.getElementById("userInput").value.trim();
+    if(!input) return;
+
+    if(suspectMode){
+        const guessed = handleSuspectGuess(input);
+        if(guessed){
+            document.getElementById("userInput").value = "";
+            return;
+        }
+    }
+
+    if(input === "0702"){
+        unlockAllClues();
+        document.getElementById("userInput").value = "";
+        return;
+    }
+
+    if(input === "단서를 조사한다."){
+        document.getElementById("logTitle").textContent = input;
+        document.getElementById("logBody").innerHTML = logs[input] || "";
+        document.getElementById("logOverlay").style.display = "block";
+        document.getElementById("logInvestigateBtn").style.display = "none";
+        enableClueMode();
+        document.getElementById("userInput").value = "";
+        return;
+    }
+
+    if(logs[input]){
+        document.getElementById("logTitle").textContent = input;
+        document.getElementById("logBody").innerHTML = logs[input];
+        document.getElementById("logOverlay").style.display = "block";
+        document.getElementById("logInvestigateBtn").style.display = "none";
+        return;
+    }
+
+    if(answerRewards[input]){
+        const reward = answerRewards[input];
+        const slot = document.getElementById("slot" + reward.slot);
+        slot.textContent = reward.icon;
+        checkAllItemsCollected();
+    }
+
+    document.getElementById("userInput").value = "";
+}
+
+function openClueSlot(slotNumber){
+    if(!clueMode) return;
+
+    const slot = document.getElementById("slot" + slotNumber);
+    if(slot.textContent.trim() === "") return;
+
+    const clue = clueSlotLogs[slotNumber];
+    if(!clue) return;
+
+    currentClueSlot = slotNumber;
+    document.getElementById("logTitle").textContent = clue.title;
+    document.getElementById("logBody").innerHTML = clue.body;
+    document.getElementById("logOverlay").style.display = "block";
+    document.getElementById("logInvestigateBtn").style.display = "block";
+}
+
+function investigateCurrentClue(){
+    if(currentClueSlot === null) return;
+
+    const slotIndex = currentClueSlot - 1;
+    let resultType;
+
+    if(answer[slotIndex] === 1){
+        resultType = 1;
+    }else{
+        resultType = hint[slotIndex];
+    }
+
+    let title = "";
+    let body = "";
+
+    switch(currentClueSlot){
+        case 1:
+            title = "도서 대출 이력서";
+            if(resultType === 0){
+                body = "<span style='color:#6bff6b'>사건 당시 대출 이력이 있다.</span>";
+            }else{
+                body = "<span style='color:#ff5a5a'>사건 당시 이력이 고쳐쓰여진 흔적이 있다.</span>";
+            }
+            break;
+
+        case 2:
+            title = "필기노트";
+            if(resultType === 0){
+                body = "<span style='color:#6bff6b'>공책에 B의 지문과<br>최근에 사용한 흔적이 보인다.</span>";
+            }else{
+                body = "<span style='color:#ff5a5a'>피해자의 지문과 혈흔이 발견되었다.</span>";
+            }
+            break;
+
+        case 3:
+            title = "머리카락";
+            if(resultType === 0){
+                body = "<span style='color:#6bff6b'>머리카락이 C의 것과 일치한다.</span>";
+            }else{
+                body = "<span style='color:#ff5a5a'>C와 피해자의 머리카락이 발견됬다.</span>";
+            }
+            break;
+
+        case 4:
+            title = "태권도 도복";
+            if(resultType === 0){
+                body = "<span style='color:#6bff6b'>사건당시 사용흔적과<br>D의 흔적이 발견되었다.</span>";
+            }else{
+                body = "<span style='color:#ff5a5a'>도복에 먼지가 쌓여있다.</span>";
+            }
+            break;
+
+        case 5:
+            title = "젖은 우산";
+            if(resultType === 0){
+                body = "<span style='color:#6bff6b'>E의 지문이 검출되었다.<br>물기가 대부분 말라있다.</span>";
+            }else{
+                body = "<span style='color:#ff5a5a'>E의 지문이 검출되었다.<br>물기가 이상하게 많고 붉다.</span>";
+            }
+            break;
+    }
+
+    document.getElementById("logTitle").textContent = title;
+    document.getElementById("logBody").innerHTML = body;
+
+    investigatedSlots[slotIndex] = true;
+    checkAllCluesInvestigated();
+}
+
+function showFinalStatement(letter){
+    const index = suspectNames.indexOf(letter);
+    if(index === -1) return;
+
+    const result = answer[index];
+    const data = finalStatements[letter];
+
+    document.getElementById("logTitle").textContent = letter + "의 마지막 발언";
+    document.getElementById("logBody").innerHTML =
+        data.question + "<br><br>" + data[result];
+    document.getElementById("logOverlay").style.display = "block";
+    document.getElementById("logInvestigateBtn").style.display = "none";
+}
+
+function closeLog(){
+    document.getElementById("logOverlay").style.display = "none";
+    document.getElementById("logInvestigateBtn").style.display = "none";
+}
+
+function openMap(){
+    document.getElementById("mapOverlay").style.display = "block";
+}
+
+function closeMap(){
+    document.getElementById("mapOverlay").style.display = "none";
+}
+
+function openPerson(){
+    document.getElementById("personOverlay").style.display = "block";
+}
+
+function closePerson(){
+    document.getElementById("personOverlay").style.display = "none";
+}
+
+function openBook(){
+    document.getElementById("bookOverlay").style.display = "block";
+}
+
+function closeBook(){
+    document.getElementById("bookOverlay").style.display = "none";
 }
 </script>
 
