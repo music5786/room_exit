@@ -195,7 +195,7 @@ body{
     cursor:pointer;
 }
 
-/* overlay */
+/* overlay 공통 */
 .overlay{
     position:absolute;
     top:0;
@@ -225,9 +225,34 @@ body{
     cursor:pointer;
 }
 
+/* 지도 레이어 전용 */
+#mapOverlay{
+    position:absolute;
+    inset:0;
+    background:#111;
+    display:none;
+    z-index:6;
+    padding:0;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+#mapOverlay .overlay-icon{
+    position:absolute;
+    top:12px;
+    left:12px;
+    font-size:42px;
+    cursor:pointer;
+    z-index:2;
+}
+
 .map-image{
+    position:absolute;
+    inset:0;
     width:100%;
-    margin-top:80px;
+    height:100%;
+    object-fit:cover;
+    margin:0;
     pointer-events:none;
 }
 
