@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모바일 인터페이스</title>
+
+<style>
+body {
+    margin: 0;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.phone {
+    width: 360px;
+    height: 640px;
+    background: #111;
+    border-radius: 30px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+/* 🔥 스토리 레이어 */
+.overlay2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    z-index: 4;
+    opacity: 1;
+    transition: opacity 0.4s;
+}
+
+/* 🧱 게임 레이어 */
+.overlay3 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 3;
+    background: #111;
+}
+
+/* 📘 책 레이어 */
+.bookOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 5;
+    background: #1a1a1a;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 📱 기본 UI */
+.map-icon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 48px;
+}
+
+/* 📕 책 아이콘 */
+.book-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 48px;
+    filter: sepia(100%) hue-rotate(20deg) brightness(0.85) saturate(0.7);
+    opacity: 0.95;
+    cursor: pointer;
+}
+
+.book-icon:active {
+    transform: scale(0.95);
+}
+
+/* ⌨️ 입력창 */
+.input-box {
+    position: absolute;
+    top: 180px;
+    left: 20px;
+    right: 20px;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-box textarea {
+    flex: 1;
+    resize: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e0d3b8;
+    font-size: 16px;
+}
+
+.send-btn {
+    height: 40px;
+    background: #444;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.send-btn:active {
+    background: #666;
+}
+
+/* 하단 슬롯 */
+.bottom {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.box {
+    flex: 1;
+    height: 60px;
+    background: #333;
+    border-radius: 10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+}
+
+/* 돌아가기 버튼 */
+.back-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    padding: 10px 15px;
+    background: #444;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* 텍스트 */
+.story {
+    font-size: 20px;
+    line-height: 1.8;
+}
+
+.red {
+    color: #ff3b3b;
+    font-weight: bold;
+}
+
+.beige {
+    color: #f5e6c8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone" onclick="nextStep()">
+
+    <!-- 📱 기본 UI -->
+    <div class="map-icon">🗺️</div>
+    <div class="book-icon" onclick="openBook(event)">📕</div>
+
+    <!-- ⌨️ 입력창 -->
+    <div class="input-box">
+        <textarea id="userInput" placeholder="내용을 입력하세요..."></textarea>
+        <div class="send-btn" onclick="sendInput(event)">입력</div>
+    </div>
+
+    <!-- 하단 슬롯 -->
+    <div class="bottom">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+
+    <!-- 🧱 게임 레이어 -->
+    <div id="overlay3" class="overlay3">
+        <div class="back-btn" onclick="goHome(event)">돌아가기</div>
+    </div>
+
+    <!-- 🔥 스토리 레이어 -->
+    <div id="overlay2" class="overlay2">
+        <div class="story">
+
+            <div id="line1">
+                <span class="red">살인 사건이 일어났다.</span>
+                <span id="arrow1" class="beige"> ▼</span>
+            </div>
+
+            <div id="line2" style="display:none; margin-top: 40px;">
+                <span class="beige">"피해자는 2X살 OOO씨 호서대학교 재학생"</span>
+                <span id="arrow2" class="beige"> ▼</span>
+            </div>
+
+            <div id="line3" style="display:none; margin-top: 40px;">
+                <span class="beige">"범인은 아직 잡히지 않았다."</span>
+                <span id="arrow3" class="beige"> ▼</span>
+            </div>
+
+            <div id="line4" style="display:none; margin-top: 40px;">
+                <span class="beige">"정말 말도 안 나올 정도로 아무런 단서도 잡히지 않는다."</span>
+                <span id="arrow4" class="beige"> ▼</span>
+            </div>
+
+            <div id="line5" style="display:none; margin-top: 40px;">
+                <span class="beige">"유일한 증거품은 피해자의 휴대폰"</span>
+                <span id="arrow5" class="beige"> ▼</span>
+            </div>
+
+            <div id="line6" style="display:none; margin-top: 40px;">
+                <span class="beige">"나는 무언가에 홀린 듯 휴대폰을 켜본다."</span>
+                <span id="arrow6" class="beige"> ▼</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 📘 책 레이어 -->
+    <div id="bookOverlay" class="bookOverlay">
+        <h2 style="color:#f5e6c8;">📕 단서 노트</h2>
+        <p style="color:#f5e6c8;">• 피해자의 휴대폰이 유일한 단서</p>
+        <p style="color:#f5e6c8;">• 마지막 기록이 삭제됨</p>
+        <p style="color:#f5e6c8;">• 외부 접근 흔적 존재</p>
+
+        <div class="back-btn" onclick="closeBook(event)">닫기</div>
+    </div>
+
+</div>
+
+<script>
+let step = 0;
+let keyCount = 0;
+
+function nextStep() {
+    step++;
+
+    if (step === 1) { arrow1.style.display="none"; line2.style.display="block"; }
+    else if (step === 2) { arrow2.style.display="none"; line3.style.display="block"; }
+    else if (step === 3) { arrow3.style.display="none"; line4.style.display="block"; }
+    else if (step === 4) { arrow4.style.display="none"; line5.style.display="block"; }
+    else if (step === 5) { arrow5.style.display="none"; line6.style.display="block"; }
+    else if (step === 6) {
+        overlay2.style.opacity="0";
+        setTimeout(()=>{
+            overlay2.style.display="none";
+            overlay3.style.display="block";
+        },400);
+    }
+}
+
+function sendInput(e) {
+    e.stopPropagation();
+
+    const inputEl = document.getElementById("userInput");
+    const input = inputEl.value;
+
+    if (input.trim() === "") return;
+
+    // 🔑 열쇠 시스템
+    if (input === "1234") {
+        const boxes = document.querySelectorAll(".box");
+
+        if (keyCount < boxes.length) {
+            boxes[keyCount].textContent = "🔑";
+            keyCount++;
+        }
+    }
+
+    alert("입력됨: " + input);
+    inputEl.value = "";
+}
+
+function goHome(e) {
+    e.stopPropagation();
+    overlay3.style.display="none";
+}
+
+function openBook(e) {
+    e.stopPropagation();
+    document.getElementById("bookOverlay").style.display="block";
+}
+
+function closeBook(e) {
+    e.stopPropagation();
+    document.getElementById("bookOverlay").style.display="none";
+}
+</script>
+
+</body>
+</html>
